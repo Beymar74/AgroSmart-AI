@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Thermometer, AirHumidity, Sun, Droplet, Cat, AlertTriangle } from 'lucide-react';
+import { Thermometer, CloudRain, Sun, Droplet, Cat, AlertTriangle, Cloud } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -124,256 +124,325 @@ export default function Home() {
   };
 
   return (
-    <>
-      <div className="container mx-auto p-4 space-y-4">
-        <header className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">AgroSmart AI Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
+    
+      
+        
+          
+            
+              
+                
+                  AgroSmart AI Dashboard
+                
+              
+            
+          
+          
             Última actualización: {formatDate(currentDateTime)}
-          </p>
-        </header>
+          
+        
 
         {alerts.length > 0 && (
-          <Alert variant="destructive">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertTitle>¡Alerta Crítica!</AlertTitle>
-            <AlertDescription>
-              <ScrollArea className="max-h-80">
-                <ul>
-                  {alerts.map((alert, index) => (
-                    <li key={index} className="flex items-center justify-between">
-                      {alert}
-                      <Button variant="ghost" size="sm" onClick={() => clearAlert(index)}>
-                        Descartar
-                      </Button>
-                    </li>
-                  ))}
-                </ul>
-              </ScrollArea>
-            </AlertDescription>
-          </Alert>
+          
+            
+              
+                ¡Alerta Crítica!
+              
+              
+                
+                  
+                    {alerts.map((alert, index) => (
+                      
+                        {alert}
+                        
+                          Descartar
+                        
+                      
+                    ))}
+                  
+                
+              
+            
+          
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        
           {/* Environmental Data */}
-          <Card className={getStatusColor('normal')}>
-            <CardHeader>
-              <CardTitle>Datos Ambientales</CardTitle>
-              <CardDescription>Métricas en tiempo real</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p><Thermometer className="inline-block h-4 w-4 mr-2" /> Temperatura: {environmentData?.temperatureCelsius}°C</p>
-              <p><AirHumidity className="inline-block h-4 w-4 mr-2" /> Humedad: {environmentData?.humidityPercentage}%</p>
-              <p><Sun className="inline-block h-4 w-4 mr-2" /> Luz Solar: {environmentData?.sunlightLevel}</p>
-              <p><Droplet className="inline-block h-4 w-4 mr-2" /> Nivel de Agua: {environmentData?.waterLevel}</p>
-              <p className="text-sm text-muted-foreground">Última actualización: {formatDate(currentDateTime)}</p>
-            </CardContent>
-          </Card>
+          
+            
+              
+                Datos Ambientales
+              
+              
+                Métricas en tiempo real
+              
+            
+            
+              
+                 Temperatura: {environmentData?.temperatureCelsius}°C
+                
+                 Humedad: {environmentData?.humidityPercentage}%
+                
+                 Luz Solar: {environmentData?.sunlightLevel}
+                
+                 Nivel de Agua: {environmentData?.waterLevel}
+                
+                Última actualización: {formatDate(currentDateTime)}
+              
+            
+          
 
           {/* Animal Monitoring */}
-          <Card className={animalData?.healthStatus ? getStatusColor(animalData.healthStatus) : statusColors.normal}>
-            <CardHeader>
-              <CardTitle>Monitoreo Animal</CardTitle>
-              <CardDescription>Datos RFID más recientes</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <p><Cat className="inline-block h-4 w-4 mr-2" /> Código: {animalData?.code}</p>
-              <p><Thermometer className="inline-block h-4 w-4 mr-2" /> Temperatura: {animalData?.temperature}°C</p>
-              <p>Estado: {animalData?.healthStatus}</p>
-              <p>Última Alimentación: {animalData?.lastFeedingTime}</p>
-               <p className="text-sm text-muted-foreground">Última actualización: {formatDate(currentDateTime)}</p>
-              <Button variant="secondary" size="sm" onClick={() => openAnimalDetails(animalData)}>
-                Ver Detalles
-              </Button>
-            </CardContent>
-          </Card>
+          
+            
+              
+                Monitoreo Animal
+              
+              
+                Datos RFID más recientes
+              
+            
+            
+              
+                 Código: {animalData?.code}
+                
+                 Temperatura: {animalData?.temperature}°C
+                
+                Estado: {animalData?.healthStatus}
+                
+                Última Alimentación: {animalData?.lastFeedingTime}
+                
+                Última actualización: {formatDate(currentDateTime)}
+                
+                  Ver Detalles
+                
+              
+            
+          
 
           {/* Alerts Display */}
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>Alertas</CardTitle>
-              <CardDescription>Alertas recientes para conocimiento rápido</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="max-h-80">
-                {alerts.length > 0 ? (
-                  <div className="space-y-2">
-                    {alerts.map((alert, index) => (
-                      <Alert key={index}>
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>¡Alerta!</AlertTitle>
-                        <AlertDescription>{alert}</AlertDescription>
-                        <Button variant="ghost" size="sm" onClick={() => clearAlert(index)}>
-                          Descartar
-                        </Button>
-                      </Alert>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No hay alertas recientes.</p>
-                )}
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        </div>
+          
+            
+              
+                Alertas
+              
+              
+                Alertas recientes para conocimiento rápido
+              
+            
+            
+              
+                
+                  {alerts.length > 0 ? (
+                    
+                      {alerts.map((alert, index) => (
+                        
+                          
+                            ¡Alerta!
+                          
+                          {alert}
+                          
+                            Descartar
+                          
+                        
+                      ))}
+                    
+                  ) : (
+                    
+                      No hay alertas recientes.
+                    
+                  )}
+                
+              
+            
+          
+        
 
         {/* Quick Actions */}
-        <div className="flex justify-center space-x-4">
-          <Button onClick={() => handleAction("activar riego")}>Activar Riego</Button>
-          <Button onClick={() => handleAction("alimentar animal manualmente")}>Alimentar Animal</Button>
-          <Button onClick={() => handleAction("revisar historial de eventos")}>Historial de Eventos</Button>
-        </div>
+        
+          
+            Activar Riego
+          
+          
+            Alimentar Animal
+          
+          
+            Historial de Eventos
+          
+        
 
         {/* Historical Graphs */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold">Gráficos Históricos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Ambient Temperature */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Temperatura Ambiental (°C)</CardTitle>
-                <CardDescription>Variación histórica de temperatura</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={temperatureData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="temperature" stroke="#8884d8" name="°C" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+        
+          
+            Gráficos Históricos
+            
+          
+          
+            
+              {/* Ambient Temperature */}
+              
+                
+                  Temperatura Ambiental (°C)
+                  
+                  
+                    Variación histórica de temperatura
+                  
+                
+                
+                  
+                    
+                      
+                        
+                          
+                          
+                          
+                        
+                      
+                    
+                  
+                
+              
+            
 
             {/* Soil Moisture */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Humedad del Suelo (%)</CardTitle>
-                <CardDescription>Niveles históricos de humedad del suelo</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={soilMoistureData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="moisture" stroke="#82ca9d" fill="#82ca9d" name="%" />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            
+              
+                
+                  Humedad del Suelo (%)
+                  
+                  
+                    Niveles históricos de humedad del suelo
+                  
+                
+                
+                  
+                    
+                      
+                        
+                          
+                          
+                          
+                        
+                      
+                    
+                  
+                
+              
+            
 
             {/* Animal Temperature */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Temperatura Corporal por Animal</CardTitle>
-                <CardDescription>Variación de temperatura por animal</CardDescription>
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        Seleccionar Animal
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56">
-                      <DropdownMenuItem onClick={() => handleAnimalSelection("animal1")}>Animal 1</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleAnimalSelection("animal2")}>Animal 2</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={animalTemperatureData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="hour" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    {selectedAnimalCode === "animal1" && (
-                      <Line type="monotone" dataKey="animal1" stroke="#ff7300" name="Animal 1 (°C)" />
-                    )}
-                    {selectedAnimalCode === "animal2" && (
-                      <Line type="monotone" dataKey="animal2" stroke="#387908" name="Animal 2 (°C)" />
-                    )}
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            
+              
+                
+                  Temperatura Corporal por Animal
+                  
+                  
+                    Variación de temperatura por animal
+                  
+                   
+                      
+                        
+                          Seleccionar Animal
+                        
+                      
+                      
+                        
+                          Animal 1
+                        
+                        
+                          Animal 2
+                        
+                      
+                    
+                  
+                
+                
+                  
+                    
+                      
+                        
+                          
+                          
+                          
+                        
+                      
+                    
+                  
+                
+              
+            
 
             {/* Alert History */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Historial de Alertas (Últimas 24 Horas)</CardTitle>
-                <CardDescription>Número de alertas por tipo</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={alertHistoryData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="type" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count" fill="#a855f7" name="Alertas" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-          <Dialog open={selectedAnimal !== null} onOpenChange={closeAnimalDetails}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Detalles del Animal</DialogTitle>
-                <DialogDescription>
-                  Información detallada del animal seleccionado.
-                </DialogDescription>
-              </DialogHeader>
-              {selectedAnimal && (
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label
-                      htmlFor="name"
-                      className="text-right text-sm font-medium leading-none text-right"
-                    >
-                      Código
-                    </label>
-                    <p>{selectedAnimal.code}</p>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label
-                      htmlFor="code"
-                      className="text-right text-sm font-medium leading-none text-right"
-                    >
-                      Temperatura
-                    </label>
-                    <p>{selectedAnimal.temperature}°C</p>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label
-                      htmlFor="username"
-                      className="text-right text-sm font-medium leading-none text-right"
-                    >
-                      Estado de Salud
-                    </label>
-                    <p>{selectedAnimal.healthStatus}</p>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <label
-                      htmlFor="username"
-                      className="text-right text-sm font-medium leading-none text-right"
-                    >
-                      Última Alimentación
-                    </label>
-                    <p>{selectedAnimal.lastFeedingTime}</p>
-                  </div>
-                </div>
-              )}
-            </DialogContent>
-          </Dialog>
-      </div>
-    </>
+            
+              
+                
+                  Historial de Alertas (Últimas 24 Horas)
+                  
+                  
+                    Número de alertas por tipo
+                  
+                
+                
+                  
+                    
+                      
+                        
+                          
+                          
+                          
+                        
+                      
+                    
+                  
+                
+              
+            
+          
+        
+          
+            
+              
+                
+                  Detalles del Animal
+                  
+                  
+                    Información detallada del animal seleccionado.
+                  
+                
+                {selectedAnimal && (
+                  
+                    
+                      
+                        
+                          Código
+                        
+                        {selectedAnimal.code}
+                      
+                      
+                        
+                          Temperatura
+                        
+                        {selectedAnimal.temperature}°C
+                      
+                      
+                        
+                          Estado de Salud
+                        
+                        {selectedAnimal.healthStatus}
+                      
+                      
+                        
+                          Última Alimentación
+                        
+                        {selectedAnimal.lastFeedingTime}
+                      
+                    
+                  
+                )}
+              
+            
+          
+        
+      
+    
   );
 }
