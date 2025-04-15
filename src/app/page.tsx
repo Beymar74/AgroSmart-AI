@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Icons } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { Thermometer, CloudRain, Sun, Droplet, Cat, AlertTriangle, Cloud } from 'lucide-react';
+import { Thermometer, CloudRain, Sun, Droplet, Cat, AlertTriangle } from 'lucide-react';
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -130,9 +130,7 @@ export default function Home() {
           
             
               
-                
-                  AgroSmart AI Dashboard
-                
+                AgroSmart AI Dashboard
               
             
           
