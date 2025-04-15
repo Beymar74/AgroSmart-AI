@@ -130,12 +130,14 @@ export default function Home() {
           
             
               
-                AgroSmart AI Dashboard
+                <h1>AgroSmart AI Dashboard</h1>
               
             
           
           
-            Última actualización: {formatDate(currentDateTime)}
+            
+              <span>{`Última actualización: ${formatDate(currentDateTime)}`}</span>
+            
           
         
 
@@ -444,3 +446,4 @@ export default function Home() {
     
   );
 }
+
