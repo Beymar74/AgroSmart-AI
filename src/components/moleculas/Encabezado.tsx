@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function Encabezado() {
   const [fechaActual, setFechaActual] = useState("");
 
+  
   useEffect(() => {
     const ahora = new Date().toLocaleString("es-BO", {
       weekday: "long",
