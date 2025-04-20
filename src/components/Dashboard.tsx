@@ -7,7 +7,7 @@ import { getDatabase, ref, set, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 
 
-import Encabezado from "@/components/moleculas/Encabezado";
+//import Encabezado from "@/components/moleculas/Encabezado";
 import BotonesAccion from "@/components/moleculas/BotonesAccion";
 import TarjetaAmbiental from "@/components/organismos/TarjetaAmbiental";
 import TarjetaAnimal from "@/components/organismos/TarjetaAnimal";
@@ -208,7 +208,6 @@ useEffect(() => {
 
   return (
     <main className="p-6 space-y-6">
-      <Encabezado />
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <TarjetaAmbiental temperatura={firebaseTemp} luz={firebaseLuz} humedadSuelo={firebaseHumedadSuelo} />
         <TarjetaAnimal animalData={animalData} temperaturaIR={firebaseTempAnimal} />
