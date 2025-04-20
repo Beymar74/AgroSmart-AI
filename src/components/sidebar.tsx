@@ -3,7 +3,7 @@ import React from 'react';
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="sidebar bg-[#fafbfc] text-black w-64 h-full flex flex-col p-6">
+    <div className="sidebar bg-[#f7f7f7] text-black w-64 h-full flex flex-col p-6">
 
       <div className="logo flex items-center mb-8">
         <img src="/logotipo.jpg" alt="AgroSmart IA" className="w-12 h-12 mr-4" />
