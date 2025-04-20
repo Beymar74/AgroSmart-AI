@@ -1,16 +1,13 @@
-// App.tsx
 import React from 'react';
-import Header from '@/components/header';  // Asegúrate de que la ruta sea correcta
-import Sidebar from '@/components/sidebar';  // Asegúrate de que la ruta sea correcta
-import SidebarDer from '@/components/sidebarDer'; // Asegúrate de que la ruta sea correcta
-import Dashboard from '@/components/Dashboard'; // Asegúrate de que la ruta sea correcta
+import Header from '@/components/header';
+import Sidebar from '@/components/sidebar'; 
+import SidebarDer from '@/components/sidebarDer'; 
+import Dashboard from '@/components/Dashboard'; 
 
 function App() {
   return (
     <div className="App flex min-h-screen">
-      <Sidebar />  {/* Sidebar izquierdo */}
-      
-      {/* Panel de control en la parte central */}
+      <Sidebar />  
       <div className="main-content flex flex-col flex-grow ml-1 mr-1">
         <Header title="Panel de Control" />
         <div className="dashboard-container flex-1">
@@ -18,7 +15,7 @@ function App() {
         </div>
       </div>
 
-      <SidebarDer />  {/* Sidebar derecho */}
+      <SidebarDer />
     </div>
   );
 }
