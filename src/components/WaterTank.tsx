@@ -1,18 +1,25 @@
-// src/components/WaterTank.tsx
+/* components/WaterTank.tsx */
+import React from 'react';
 
 interface WaterTankProps {
-  nivelPorcentaje: number; // entre 0 y 100
+  nivelPorcentaje: number;          // entre 0 y 100
+  borderColorClass: string;         // p.ej. 'border-blue-500'
+  fillColorClass: string;           // p.ej. 'bg-blue-400'
+  textColorClass: string;           // p.ej. 'text-blue-900'
 }
 
-export default function WaterTank({ nivelPorcentaje }: WaterTankProps) {
+export default function WaterTank({ nivelPorcentaje, borderColorClass, fillColorClass, textColorClass }: WaterTankProps) {
   const altura = Math.max(0, Math.min(100, nivelPorcentaje));
   return (
-    <div className="w-24 h-40 border-4 border-blue-500 rounded-lg overflow-hidden relative bg-white shadow-md">
+    // Tanque alto para simetría vertical
+    <div className={`relative w-24 h-56 border-2 ${borderColorClass} rounded-lg overflow-hidden bg-white shadow-md`}>
+      {/* nivel de llenado */}
       <div
-        className="absolute bottom-0 left-0 w-full bg-blue-400 transition-all duration-700"
+        className={`absolute bottom-0 left-0 w-full ${fillColorClass} transition-all duration-700`}
         style={{ height: `${altura}%` }}
       />
-      <div className="absolute inset-0 flex items-center justify-center font-bold text-sm text-blue-900">
+      {/* porcentaje centrado */}
+      <div className={`absolute inset-0 flex items-center justify-center font-bold text-sm ${textColorClass}`}>
         {altura}%
       </div>
     </div>

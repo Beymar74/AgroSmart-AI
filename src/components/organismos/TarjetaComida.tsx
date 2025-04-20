@@ -1,4 +1,4 @@
-/* components/TarjetaTanque.tsx */
+/* components/TarjetaComida.tsx */
 import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import WaterTank from '@/components/WaterTank';
@@ -7,19 +7,19 @@ interface Props {
   nivelPorcentaje: number | null;
 }
 
-export default function TarjetaTanque({ nivelPorcentaje }: Props) {
+export default function TarjetaComida({ nivelPorcentaje }: Props) {
   return (
     <Card className="flex flex-col h-full">
       <CardHeader className="flex justify-center">
-        <CardTitle className="text-center">Agua</CardTitle>
+        <CardTitle className="text-center">Comida</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 items-center justify-center">
         {nivelPorcentaje !== null ? (
           <WaterTank
             nivelPorcentaje={nivelPorcentaje}
-            borderColorClass="border-blue-500"
-            fillColorClass="bg-blue-300"
-            textColorClass="text-blue-900"
+            borderColorClass="border-green-500"
+            fillColorClass="bg-green-400"
+            textColorClass="text-green-900"
           />
         ) : (
           <p>Sin lectura</p>

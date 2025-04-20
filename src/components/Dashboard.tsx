@@ -5,21 +5,25 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
-
+//Modificando
 
 //import Encabezado from "@/components/moleculas/Encabezado";
-import BotonesAccion from "@/components/moleculas/BotonesAccion";
+import TarjetaComida from "@/components/organismos/TarjetaComida";
 import TarjetaAmbiental from "@/components/organismos/TarjetaAmbiental";
 import TarjetaAnimal from "@/components/organismos/TarjetaAnimal";
 import TarjetaAlertas from "@/components/organismos/TarjetaAlertas";
 import GraficoTemperatura from "@/components/organismos/GraficoTemperatura";
 import GraficoLuz from "@/components/organismos/GraficoLuz";
+import GraficoLuzSolar from "./organismos/GraficoLuzSolar";
 import GraficoHumedadSuelo from "@/components/organismos/GraficoHumedadSuelo";
 import TarjetaTanque from "@/components/organismos/TarjetaTanque";
 import GraficoTemperaturaAnimal from "@/components/organismos/GraficoTemperaturaAnimal";
 import GraficoHistorialAlertas from "@/components/organismos/GraficoHistorialAlertas";
 import ControlesManuales from "@/components/organismos/ControlesManuales";
+//PRINCIPAL CIRCULAR
+import GraficoCircular from "@/components/organismos/GraficoCircular";
 
+//PRINCIPAL CIRCULAR
 import { useToast } from "@/hooks/use-toast";
 import { getEnvironmentData } from "@/services/environment";
 import { getLatestAnimalData } from "@/services/animal";
@@ -62,6 +66,7 @@ export default function Dashboard() {
   const [firebaseLuz, setFirebaseLuz] = useState<number | null>(null);
   const [firebaseHumedadSuelo, setFirebaseHumedadSuelo] = useState<number | null>(null);
   const [luzData, setLuzData] = useState<any[]>([]);
+  const [solarData, setSolarData] = useState<any[]>([]);
   const [firebaseTemp, setFirebaseTemp] = useState<number | null>(null);
   const [temperatureData, setTemperatureData] = useState<any[]>([]);
   const [soilMoistureData, setSoilMoistureData] = useState<any[]>([]);
@@ -76,6 +81,14 @@ export default function Dashboard() {
     { type: "Bajo Nivel de Agua", count: Math.floor(Math.random() * 10) },
     { type: "Falta de Alimentación", count: Math.floor(Math.random() * 3) }
   ];
+  const solarCircularData = solarData.map(d => ({
+    hour: d.hour,
+    value: d.luzSolar
+  }));
+  const animalCircularData = tempAnimalData.map(d => ({
+    hour: d.hour,
+    value: d.temperatura
+  }));
 
   const { toast } = useToast();
   const currentDateTime = format(new Date(), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es });
@@ -108,6 +121,14 @@ export default function Dashboard() {
     onValue(ref(db, "ambiente/temperatura_animal"), (snap) => setFirebaseTempAnimal(snap.val()));
     onValue(ref(db, "historico/temperatura"), (snap) => setTemperatureData(Object.entries(snap.val() || {}).map(([k, v]) => ({ hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), temperature: v }))));
     onValue(ref(db, "historico/luz"), (snap) => setLuzData(Object.entries(snap.val() || {}).map(([k, v]) => ({ hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), luz: v }))));
+    onValue(ref(db, "historico/luz_solar"), (snap) =>
+            setSolarData(
+              Object.entries(snap.val() || {}).map(([k, v]) => ({
+                hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                luzSolar: v
+              }))
+            )
+          );
     onValue(ref(db, "historico/humedad_suelo"), (snap) => setSoilMoistureData(Object.entries(snap.val() || {}).map(([k, v]) => ({ hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), moisture: v }))));
     onValue(ref(db, "historico/temperatura_animal"), (snap) => setTempAnimalData(Object.entries(snap.val() || {}).map(([k, v]) => ({ hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), temperatura: v }))));
     onValue(ref(db, "alertas/error"), (snapshot) => {
@@ -206,20 +227,75 @@ useEffect(() => {
   return () => clearInterval(intervalId);
 }, [firebaseTemp, firebaseHumedadSuelo, firebaseDistancia, firebaseTempAnimal, firebaseLuz, toast]);
 
-  return (
-    <main className="p-6 space-y-6">
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TarjetaAmbiental temperatura={firebaseTemp} luz={firebaseLuz} humedadSuelo={firebaseHumedadSuelo} />
-        <TarjetaAnimal animalData={animalData} temperaturaIR={firebaseTempAnimal} />
-        <TarjetaAlertas alertas={alerts} />
-      </section>
-      <BotonesAccion onAccion={handleAction} />
-      <GraficoTemperatura data={temperatureData} />
-      <GraficoLuz data={luzData} />
-      <GraficoHumedadSuelo data={soilMoistureData} />
-      <TarjetaTanque nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
-      <GraficoTemperaturaAnimal data={tempAnimalData} />
-      <GraficoHistorialAlertas data={alertHistoryData} />
-    </main>
-  );
-}
+return (
+  <main className="p-6 space-y-6">
+
+    {/* Sección superior con tarjetas principales }
+    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <TarjetaAmbiental
+        temperatura={firebaseTemp}
+        luz={firebaseLuz}
+        humedadSuelo={firebaseHumedadSuelo}
+      />
+      <TarjetaAnimal
+        animalData={animalData}
+        temperaturaIR={firebaseTempAnimal}
+      />
+      <TarjetaAlertas alertas={alerts} />
+    </section>
+
+    {/* Sección con dos columnas principales */}
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      {/* Columna izquierda: Gráficos ambientales */}
+      <div className="space-y-6">
+        <GraficoTemperatura data={temperatureData} />
+        <GraficoLuz data={luzData} />
+        <GraficoHumedadSuelo data={soilMoistureData} />
+      </div>
+
+      {/* Columna derecha: Dashboard luz y animal, tanque, comida, historial */}
+      <div className="space-y-6">
+        
+        {/* Dashboard de luz y temperatura animal */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <GraficoCircular
+    label="Luz Solar"
+    data={solarCircularData}
+    unit="lm"
+  />
+  <GraficoCircular
+    label="Temperatura"
+    data={animalCircularData}
+    unit="°C"
+  />
+</div>
+        {/* Tarjeta tanque y comida */}
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<TarjetaComida
+   nivelPorcentaje={
+     firebaseDistancia !== null
+       ? convertirADistanciaPorcentaje(firebaseDistancia)
+       : null
+   }
+/>
+  <TarjetaTanque
+    nivelPorcentaje={
+      firebaseDistancia !== null
+        ? convertirADistanciaPorcentaje(firebaseDistancia)
+        : null
+    }
+  />
+  
+</div>
+
+        {/* Historial de alertas */}
+        <GraficoHistorialAlertas data={alertHistoryData} />
+
+      </div>
+
+    </section>
+  </main>
+);
+
+}  

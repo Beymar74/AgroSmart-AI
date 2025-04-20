@@ -16,7 +16,7 @@ export default function TarjetaAlertas({ alertas }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Alertas</CardTitle>
+        <CardTitle>Alertas y Notificaciones</CardTitle>
         <CardDescription>Últimas alertas detectadas</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">

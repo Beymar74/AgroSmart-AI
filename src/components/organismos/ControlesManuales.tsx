@@ -12,21 +12,33 @@ export default function ControlesManuales() {
   };
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {/* Riego */}
-      <Button onClick={() => actualizarActuador("riego", 1)}>💧 Activar Riego</Button>
-      <Button variant="destructive" onClick={() => actualizarActuador("riego", 0)}>🔴 Apagar Riego</Button>
-      <Button onClick={() => actualizarActuador("riego", 2)}>♻️ Modo Automático Riego</Button>
-
-      {/* Alimentador */}
-      <Button onClick={() => actualizarActuador("alimentador", 1)}>🍽️ Activar Alimentador</Button>
-      <Button variant="destructive" onClick={() => actualizarActuador("alimentador", 0)}>🔴 Apagar Alimentador</Button>
-      <Button onClick={() => actualizarActuador("alimentador", 2)}>♻️ Modo Automático Alimentador</Button>
-
-      {/* Ventilador */}
-      <Button onClick={() => actualizarActuador("ventilador", 1)}>🌀 Activar Ventilador</Button>
-      <Button variant="destructive" onClick={() => actualizarActuador("ventilador", 0)}>🔴 Apagar Ventilador</Button>
-      <Button onClick={() => actualizarActuador("ventilador", 2)}>♻️ Modo Automático Ventilador</Button>
-    </section>
+    <main className="flex min-h-screen flex-col items-center justify-between p-4 md:p-24">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+  
+        {/* Columna Izquierda: Graficos principales */}
+        <div className="flex flex-col gap-4">
+          <GraficoTemperatura />
+          <GraficoLuz />
+          <GraficoHumedadSuelo />
+        </div>
+  
+        {/* Columna Derecha: Dashboard luz solar y temperatura animal */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <GraficoLuz /> {/* Si deseas un gráfico diferente para luz solar, cámbialo aquí */}
+            <GraficoTemperaturaAnimal />
+          </div>
+          <div className="flex flex-col md:flex-row gap-4">
+            <TarjetaTanque />
+            <TarjetaComida />
+          </div>
+        </div>
+      </div>
+  
+      {/* Gráfico de Historial de Alertas */}
+      <div className="mt-8 w-full">
+        <GraficoHistorialAlertas />
+      </div>
+    </main>
   );
-}
+  
