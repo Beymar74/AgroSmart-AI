@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getDatabase, ref, set, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
-
+//Modificando
 
 import Encabezado from "@/components/moleculas/Encabezado";
 import BotonesAccion from "@/components/moleculas/BotonesAccion";
