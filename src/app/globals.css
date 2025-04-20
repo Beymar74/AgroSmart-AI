@@ -1,4 +1,4 @@
-
+/* Tailwind's base styles */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +7,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.App {
+  display: flex;
+}
+
+.content {
+  margin-left: 250px;
+  padding: 20px;
+  width: 100%;
+}
+
+/* Applying the variables in the theme */
 @layer base {
   :root {
     --background: 0 0% 96.1%; /* Light Grey */
@@ -44,6 +55,7 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
     --warning: 47 97.2% 57.9%; /* Calming Yellow */
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -81,11 +93,23 @@ body {
   }
 }
 
+/* Applying background, text color, and border to elements */
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .sidebar {
+    background-color: hsl(var(--sidebar-background));
+    color: hsl(var(--sidebar-foreground));
+    border-color: hsl(var(--sidebar-border));
+  }
+
+  .button {
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
   }
 }
