@@ -1,4 +1,4 @@
-// src/components/organismos/GraficoLuz.tsx
+// src/components/organismos/GraficoLuzSolar.tsx
 "use client";
 
 import {
@@ -17,40 +17,36 @@ import {
   Cell
 } from "recharts";
 
-interface LuzData {
+interface SolarData {
   hour: string;
-  luz: number;
+  luzSolar: number;
 }
 
 interface Props {
-  data: LuzData[];
+  data: SolarData[];
 }
 
-export default function GraficoLuz({ data }: Props) {
-  // paleta de colores por barra (ajusta a tu gusto)
+export default function GraficoLuzSolar({ data }: Props) {
   const colors = [
-    "#8E99F3", // morado
-    "#80CBC4", // menta
-    "#000000", // negro
-    "#90CAF9", // azul claro
-    "#BBDEFB", // celeste
-    "#A5D6A7"  // verde suave
+    "#F9A825", // amarillo oscuro
+    "#FFF176", // amarillo claro
+    "#FFEB3B", // amarillo
+    "#FFF59D", // pálido
+    "#FDD835",
+    "#FFEE58"
   ];
 
   return (
     <Card className="rounded-2xl overflow-hidden">
       <CardHeader>
-        <CardTitle>Luz Ambiental</CardTitle>
-        {/* Si quieres descripción, descomenta la siguiente línea */}
-        {/* <CardDescription>Histórico de niveles de luz</CardDescription> */}
+        <CardTitle>Luz Solar</CardTitle>
       </CardHeader>
-      <CardContent className="h-64">
+      <CardContent className="h-53">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
             margin={{ top: 16, right: 16, left: 0, bottom: 0 }}
           >
-            {/* Ejes sin líneas */}
             <XAxis
               dataKey="hour"
               tickLine={false}
@@ -61,16 +57,14 @@ export default function GraficoLuz({ data }: Props) {
               tickLine={false}
               axisLine={false}
               width={24}
-              domain={[0, 'dataMax + 500']}
+              domain={[0, 'dataMax + 50']}
             />
-
             <Tooltip
               cursor={{ fill: "rgba(0,0,0,0.05)" }}
-              formatter={(value: number) => [`${value}`, "Luz"]}
+              formatter={(value: number) => [`${value} lm`, "Luz Solar"]}
               labelFormatter={(label: string) => `Hora: ${label}`}
             />
-
-            <Bar dataKey="luz" barSize={32} radius={[6, 6, 0, 0]}>
+            <Bar dataKey="luzSolar" barSize={32} radius={[6, 6, 0, 0]}>
               {data.map((_, idx) => (
                 <Cell key={`cell-${idx}`} fill={colors[idx % colors.length]} />
               ))}

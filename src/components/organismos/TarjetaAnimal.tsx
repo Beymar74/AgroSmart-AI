@@ -1,6 +1,12 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent
+} from "@/components/ui/card";
 
 interface Props {
   animalData: any;
@@ -15,11 +21,11 @@ export default function TarjetaAnimal({ animalData, temperaturaIR }: Props) {
         <CardDescription>Datos RFID solo si está enfermo</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>Código: {animalData?.code}</p>
-        <p>Temp. Animal (IR): {temperaturaIR ?? '--'} °C</p>
-        <p>Estado: {animalData?.healthStatus}</p>
-        <p>Última Alimentación: {animalData?.lastFeedingTime}</p>
-        {animalData?.healthStatus?.toLowerCase() === 'enfermo' && (
+        <p>Código: {animalData?.codigo ?? "--"}</p>
+        <p>Temp. Animal (IR): {temperaturaIR ?? "--"} °C</p>
+        <p>Estado: {animalData?.estado ?? "--"}</p>
+        <p>Última Alimentación: {animalData?.ultimaAlimentacion ?? "--"}</p>
+        {animalData?.estado?.toLowerCase() === "enfermo" && (
           <p className="text-red-600 font-bold">RFID Activo</p>
         )}
       </CardContent>
