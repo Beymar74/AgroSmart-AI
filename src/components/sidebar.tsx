@@ -1,7 +1,6 @@
 
 'use client';
 import Link from 'next/link';  // Importa Link desde next/link
-=======
 import React, { useState } from 'react';
 
 const Sidebar: React.FC = () => {
