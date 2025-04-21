@@ -6,17 +6,13 @@ import { es } from "date-fns/locale";
 import { getDatabase, ref, onValue } from "firebase/database";
 import { initializeApp } from "firebase/app";
 import TarjetaComida from "@/components/organismos/TarjetaComida";
-import TarjetaAmbiental from "@/components/organismos/TarjetaAmbiental";
-import TarjetaAnimal from "@/components/organismos/TarjetaAnimal";
-import TarjetaAlertas from "@/components/organismos/TarjetaAlertas";
+import TarjetaTanque from "@/components/organismos/TarjetaTanque";
 import GraficoTemperatura from "@/components/organismos/GraficoTemperatura";
 import GraficoLuz from "@/components/organismos/GraficoLuz";
 import GraficoLuzSolar from "@/components/organismos/GraficoLuzSolar";
 import GraficoHumedadSuelo from "@/components/organismos/GraficoHumedadSuelo";
-import TarjetaTanque from "@/components/organismos/TarjetaTanque";
-import GraficoTemperaturaAnimal from "@/components/organismos/GraficoTemperaturaAnimal";
-import GraficoHistorialAlertas from "@/components/organismos/GraficoHistorialAlertas";
 import GraficoCircular from "@/components/organismos/GraficoCircular";
+import GraficoHistorialAlertas from "@/components/organismos/GraficoHistorialAlertas";
 import { useToast } from "@/hooks/use-toast";
 import { getEnvironmentData } from "@/services/environment";
 import { getLatestAnimalData } from "@/services/animal";
@@ -48,9 +44,6 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ onAccion }: DashboardProps) {
-  const [environmentData, setEnvironmentData] = useState<any>(null);
-  const [animalData, setAnimalData] = useState<any>(null);
-  const [alerts, setAlerts] = useState<string[]>([]);
   const [firebaseLuz, setFirebaseLuz] = useState<number | null>(null);
   const [firebaseHumedadSuelo, setFirebaseHumedadSuelo] = useState<number | null>(null);
   const [luzData, setLuzData] = useState<any[]>([]);
@@ -61,8 +54,6 @@ export default function Dashboard({ onAccion }: DashboardProps) {
   const [firebaseDistancia, setFirebaseDistancia] = useState<number | null>(null);
   const [firebaseTempAnimal, setFirebaseTempAnimal] = useState<number | null>(null);
   const [tempAnimalData, setTempAnimalData] = useState<any[]>([]);
-  const [irrigationConfig, setIrrigationConfig] = useState<any>(null);
-  const [feedingConfig, setFeedingConfig] = useState<any>(null);
 
   const alertHistoryData = [
     { type: "Fiebre", count: Math.floor(Math.random() * 5) },
@@ -73,30 +64,7 @@ export default function Dashboard({ onAccion }: DashboardProps) {
   const solarCircularData = solarData.map(d => ({ hour: d.hour, value: d.luzSolar }));
   const animalCircularData = tempAnimalData.map(d => ({ hour: d.hour, value: d.temperatura }));
 
-  const { toast } = useToast();
-  const currentDateTime = format(new Date(), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es });
-
   useEffect(() => {
-    async function fetchData() {
-      const envData = await getEnvironmentData();
-      const aniData = await getLatestAnimalData();
-      const irrigConf = await getIrrigationConfig();
-      const feedConf = await getFeedingConfig();
-
-      setEnvironmentData(envData);
-      setAnimalData(aniData);
-      setIrrigationConfig(irrigConf);
-      setFeedingConfig(feedConf);
-
-      const alertResult = await analyzeAndAlert({
-        historicalAlerts: "No hay alertas recientes.",
-        environmentData: envData,
-        animalData: aniData
-      });
-      setAlerts(alertResult.alerts);
-    }
-    fetchData();
-
     onValue(ref(db, "ambiente/temperatura"), snap => setFirebaseTemp(snap.val()));
     onValue(ref(db, "ambiente/luz"), snap => setFirebaseLuz(snap.val()));
     onValue(ref(db, "ambiente/humedad_suelo"), snap => setFirebaseHumedadSuelo(snap.val()));
@@ -137,47 +105,13 @@ export default function Dashboard({ onAccion }: DashboardProps) {
         temperatura: v
       })));
     });
-
-    onValue(ref(db, "alertas/error"), snapshot => {
-      const data = snapshot.val();
-      if (data) {
-        const errores = Object.values(data).filter(Boolean) as string[];
-        setAlerts(prevAlerts => Array.from(new Set([...prevAlerts, ...errores])));
-      }
-    });
   }, []);
-
-  useEffect(() => {
-    const nuevasAlertas: string[] = [];
-    if (firebaseTemp === null || firebaseTemp < -10 || firebaseTemp > 60) {
-      nuevasAlertas.push("🚨 Temperatura ambiental inválida");
-    }
-    if (firebaseHumedadSuelo === null || firebaseHumedadSuelo < 0 || firebaseHumedadSuelo > 4095) {
-      nuevasAlertas.push("🌱 Humedad del suelo fuera de rango");
-    }
-    if (firebaseDistancia === null || firebaseDistancia < 0 || firebaseDistancia > 500) {
-      nuevasAlertas.push("📏 Sensor ultrasónico con fallas");
-    }
-    if (firebaseTempAnimal === null || firebaseTempAnimal < 34 || firebaseTempAnimal > 40.5) {
-      nuevasAlertas.push("🐄 Fiebre o hipotermia detectada en el animal");
-    }
-    if (firebaseLuz === null || firebaseLuz < 0) {
-      nuevasAlertas.push("💡 Sensor de luz no disponible");
-    }
-    setAlerts(nuevasAlertas);
-
-    const intervalId = setInterval(() => setAlerts(nuevasAlertas), 60000);
-    return () => clearInterval(intervalId);
-  }, [firebaseTemp, firebaseHumedadSuelo, firebaseDistancia, firebaseTempAnimal, firebaseLuz]);
 
   return (
     <main className="p-6 space-y-6">
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TarjetaAmbiental temperatura={firebaseTemp} luz={firebaseLuz} humedadSuelo={firebaseHumedadSuelo} />
-        <TarjetaAnimal animalData={animalData} temperaturaIR={firebaseTempAnimal} />
-        <TarjetaAlertas alertas={alerts} />
-      </section>
+      {/* Ya no incluimos las tarjetas de alertas, animal ni ambiental aquí */}
 
+      {/* Gráficos y dashboard principal */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
           <GraficoTemperatura data={temperatureData} />
@@ -191,8 +125,12 @@ export default function Dashboard({ onAccion }: DashboardProps) {
             <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TarjetaComida nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
-            <TarjetaTanque nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
+            <TarjetaComida
+              nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null}
+            />
+            <TarjetaTanque
+              nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null}
+            />
           </div>
           <GraficoHistorialAlertas data={alertHistoryData} />
         </div>

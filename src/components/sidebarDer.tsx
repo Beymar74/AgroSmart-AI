@@ -124,20 +124,20 @@ const SidebarDer: React.FC = () => {
         <h3 className="font-semibold text-lg mb-2">Acciones Rápidas</h3>
 
         {renderGrupoBotones("Riego", [
-          { label: "💧 Activar Riego", value: "activar_riego" },
-          { label: "❌💧 Desactivar Riego", value: "desactivar_riego" },
+          { label: "💧 Desactivar Riego", value: "activar_riego" },
+          { label: "❌💧 Activar Riego", value: "desactivar_riego" },
           { label: "🤖 Modo Automático Riego", value: "auto_riego" },
         ])}
 
         {renderGrupoBotones("Alimentador", [
-          { label: "🍽️ Activar Alimentador", value: "activar_alimentador" },
-          { label: "❌🍽️ Desactivar Alimentador", value: "desactivar_alimentador" },
+          { label: "🍽️ Desactivar Alimentador", value: "activar_alimentador" },
+          { label: "❌🍽️ Activar Alimentador", value: "desactivar_alimentador" },
           { label: "🤖 Modo Automático Alimentador", value: "auto_alimentador" },
         ])}
 
         {renderGrupoBotones("Ventilador", [
-          { label: "🌀 Activar Ventilador", value: "activar_ventilador" },
-          { label: "❌🌀 Desactivar Ventilador", value: "desactivar_ventilador" },
+          { label: "🌀 Desactivar Ventilador", value: "activar_ventilador" },
+          { label: "❌🌀 Activar Ventilador", value: "desactivar_ventilador" },
           { label: "🤖 Modo Automático Ventilador", value: "auto_ventilador" },
         ])}
       </div>
