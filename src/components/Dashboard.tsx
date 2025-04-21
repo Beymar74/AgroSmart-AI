@@ -78,20 +78,15 @@ export default function Dashboard({ onAccion }: DashboardProps) {
       })));
     });
 
-    onValue(ref(db, "historico/luz"), snap => {
-      setLuzData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        luz: v
-      })));
-    });
-
     onValue(ref(db, "historico/luz_solar"), snap => {
-      setSolarData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        luzSolar: v
-      })));
+      setSolarData(
+        Object.entries(snap.val() || {}).map(([k, v]) => ({
+          hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          luzSolar: Math.min(100, Math.round((Number(v) / 4095) * 100)) // ✅ Normalizado
+        }))
+      );
     });
-
+    
     onValue(ref(db, "historico/humedad_suelo"), snap => {
       setSoilMoistureData(Object.entries(snap.val() || {}).map(([k, v]) => ({
         hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -121,7 +116,7 @@ export default function Dashboard({ onAccion }: DashboardProps) {
 
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <GraficoCircular label="Luz Solar" data={solarCircularData} unit="lm" />
+          <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
             <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
