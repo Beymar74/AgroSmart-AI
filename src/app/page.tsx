@@ -1,31 +1,28 @@
 "use client";
 
-import React, { useState } from 'react';
-import Header from '@/components/header';
-import Sidebar from '@/components/sidebar';
-import SidebarDer from '@/components/sidebarDer';
-import Dashboard from '@/components/Dashboard';
+import React, { useState } from "react";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
+import SidebarDer from "@/components/sidebarDer";
+import Dashboard from "@/components/Dashboard";
 
-export default function App() {
+export default function Page() {
   const [mostrarSidebar, setMostrarSidebar] = useState(false);
 
   return (
     <div className="flex min-h-screen relative overflow-x-hidden">
-      {/* Sidebar fijo en escritorio */}
+      {/* Sidebar izquierdo */}
       <div className="hidden md:block">
         <Sidebar />
       </div>
 
-      {/* Sidebar flotante para móviles con scroll */}
+      {/* Sidebar móvil */}
       {mostrarSidebar && (
         <>
-          {/* Overlay */}
           <div
             className="fixed inset-0 bg-black bg-opacity-40 z-40"
             onClick={() => setMostrarSidebar(false)}
           />
-
-          {/* Panel flotante con scroll interno */}
           <div className="fixed top-0 left-0 z-50 bg-white shadow-lg w-64 h-full overflow-y-auto animate-slide-in-left">
             <Sidebar />
             <button
@@ -46,7 +43,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Sidebar derecho solo en pantallas grandes */}
+      {/* Sidebar derecho */}
       <div className="hidden lg:block">
         <SidebarDer />
       </div>
