@@ -67,7 +67,7 @@ const DataHistoricos: React.FC = () => {
 
       <div className="">
         <Indicadores />
-      </div>
+      </div> 
 
       <div className="bg-white p-4 shadow rounded-lg">
         <h3 className="font-semibold text-lg mb-4">Alertas</h3>
