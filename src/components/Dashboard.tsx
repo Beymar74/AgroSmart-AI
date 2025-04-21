@@ -1,25 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-
+import { initializeApp } from "firebase/app";
 import TarjetaComida from "@/components/organismos/TarjetaComida";
 import TarjetaTanque from "@/components/organismos/TarjetaTanque";
-import TarjetaAmbiental from "@/components/organismos/TarjetaAmbiental";
-import TarjetaAnimal from "@/components/organismos/TarjetaAnimal";
-import TarjetaAlertas from "@/components/organismos/TarjetaAlertas";
-import ControlesManuales from "@/components/organismos/ControlesManuales";
-
 import GraficoTemperatura from "@/components/organismos/GraficoTemperatura";
 import GraficoLuz from "@/components/organismos/GraficoLuz";
 import GraficoLuzSolar from "@/components/organismos/GraficoLuzSolar";
 import GraficoHumedadSuelo from "@/components/organismos/GraficoHumedadSuelo";
 import GraficoCircular from "@/components/organismos/GraficoCircular";
 import GraficoHistorialAlertas from "@/components/organismos/GraficoHistorialAlertas";
-import GraficoTemperaturaAnimal from "@/components/organismos/GraficoTemperaturaAnimal"; // <— ¡este import faltaba!
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBoy3db8ZR5zglMwm0mwt8G4-rNRbaQ6w",
@@ -98,55 +89,41 @@ export default function Dashboard() {
     });
   }, []);
 
-  return (
-    <main className="p-6 min-h-screen bg-[#f8f8f8]">
-      <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {/* Gráficos principales */}
-        <GraficoTemperatura data={temperatureData} />
-        <GraficoHumedadSuelo data={soilMoistureData} />
-        <GraficoLuz data={luzData} />
-        <GraficoLuzSolar data={solarData} />
-        <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
-        <GraficoCircular label="Temperatura Animal" data={animalCircularData} unit="°C" />
-        <GraficoTemperaturaAnimal data={tempAnimalData} />
-        <GraficoHistorialAlertas data={alertHistoryData} />
-  
-        {/* Tarjetas */}
-        <TarjetaAmbiental
-          temperatura={firebaseTemp}
-          humedad={firebaseHumedadSuelo}
-          luz={firebaseLuz}
-        />
-        <TarjetaAnimal temperatura={firebaseTempAnimal} />
-        <TarjetaComida
-          nivelPorcentaje={
-            firebaseDistancia !== null
-              ? convertirADistanciaPorcentaje(firebaseDistancia)
-              : null
-          }
-        />
-        <TarjetaTanque
-          nivelPorcentaje={
-            firebaseDistancia !== null
-              ? convertirADistanciaPorcentaje(firebaseDistancia)
-              : null
-          }
-        />
-        <TarjetaAlertas alertas={alerts} />
-  
-        {/* Controles manuales (si los estás usando) */}
-        <ControlesManuales
-          irrigationConfig={irrigationConfig}
-          feedingConfig={feedingConfig}
-          onIrrigate={triggerIrrigation}
-          onFeed={triggerFeeding}
-          onStopIrrigation={stopIrrigation}
-          onStopFeeding={stopFeeding}
-          onFan={triggerFan}
-          onStopFan={stopFan}
-          onAutoFan={autoFan}
-        />
-      </div>
-    </main>
-  );
-}
+    return (
+        <main className="p-6 min-h-screen bg-[#f8f8f8]">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {/* Gráficos de línea */}
+              <GraficoTemperatura data={temperatureData} />
+              <GraficoHumedadSuelo data={soilMoistureData} />
+              {/* Gráficos de luz */}
+              <GraficoLuz data={luzData} />
+              <GraficoLuzSolar data={solarData} />
+    
+              {/* Gráficos circulares */}
+              <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
+              <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
+    
+              {/* Historial de alertas */}
+              <GraficoHistorialAlertas data={alertHistoryData} />
+    
+              {/* Tarjetas de estado */}
+              <TarjetaComida
+                nivelPorcentaje={
+                  firebaseDistancia !== null
+                    ? convertirADistanciaPorcentaje(firebaseDistancia)
+                    : null
+                }
+              />
+              <TarjetaTanque
+                nivelPorcentaje={
+                  firebaseDistancia !== null
+                    ? convertirADistanciaPorcentaje(firebaseDistancia)
+                    : null
+                }
+              />
+            </div>
+          </div>
+        </main>
+      );
+    }
