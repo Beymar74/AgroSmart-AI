@@ -89,41 +89,76 @@ export default function Dashboard() {
     });
   }, []);
 
-    return (
-        <main className="p-6 min-h-screen bg-[#f8f8f8]">
-          <div className="max-w-[1600px] mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {/* Gráficos de línea */}
-              <GraficoTemperatura data={temperatureData} />
-              <GraficoHumedadSuelo data={soilMoistureData} />
-              {/* Gráficos de luz */}
-              <GraficoLuz data={luzData} />
-              <GraficoLuzSolar data={solarData} />
+  return (
+    <main className="p-6 space-y-6">
+  
+      {/* Sección superior con tarjetas principales }
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <TarjetaAmbiental
+          temperatura={firebaseTemp}
+          luz={firebaseLuz}
+          humedadSuelo={firebaseHumedadSuelo}
+        />
+        <TarjetaAnimal
+          animalData={animalData}
+          temperaturaIR={firebaseTempAnimal}
+        />
+        <TarjetaAlertas alertas={alerts} />
+      </section>
+  
+      {/* Sección con dos columnas principales */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Columna izquierda: Gráficos ambientales */}
+        <div className="space-y-6">
+          <GraficoTemperatura data={temperatureData} />
+          <GraficoLuz data={luzData} />
+          <GraficoHumedadSuelo data={soilMoistureData} />
+        </div>
+  
+        {/* Columna derecha: Dashboard luz y animal, tanque, comida, historial */}
+        <div className="space-y-6">
+          
+          {/* Dashboard de luz y temperatura animal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <GraficoCircular
+      label="Luz Solar"
+      data={solarCircularData}
+      unit="lm"
+    />
+    <GraficoCircular
+      label="Temperatura"
+      data={animalCircularData}
+      unit="°C"
+    />
+  </div>
+          {/* Tarjeta tanque y comida */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <TarjetaComida
+     nivelPorcentaje={
+       firebaseDistancia !== null
+         ? convertirADistanciaPorcentaje(firebaseDistancia)
+         : null
+     }
+  />
+    <TarjetaTanque
+      nivelPorcentaje={
+        firebaseDistancia !== null
+          ? convertirADistanciaPorcentaje(firebaseDistancia)
+          : null
+      }
+    />
     
-              {/* Gráficos circulares */}
-              <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
-              <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
-    
-              {/* Historial de alertas */}
-              <GraficoHistorialAlertas data={alertHistoryData} />
-    
-              {/* Tarjetas de estado */}
-              <TarjetaComida
-                nivelPorcentaje={
-                  firebaseDistancia !== null
-                    ? convertirADistanciaPorcentaje(firebaseDistancia)
-                    : null
-                }
-              />
-              <TarjetaTanque
-                nivelPorcentaje={
-                  firebaseDistancia !== null
-                    ? convertirADistanciaPorcentaje(firebaseDistancia)
-                    : null
-                }
-              />
-            </div>
-          </div>
-        </main>
-      );
-    }
+  </div>
+  
+          {/* Historial de alertas */}
+          <GraficoHistorialAlertas data={alertHistoryData} />
+  
+        </div>
+  
+      </section>
+    </main>
+  );
+  
+  }  
+  
