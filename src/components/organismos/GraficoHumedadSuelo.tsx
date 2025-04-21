@@ -11,8 +11,7 @@ export default function GraficoHumedadSuelo({ data }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Humedad del Suelo (%)</CardTitle>
-        <CardDescription>Histórico de humedad en el suelo</CardDescription>
+        <CardTitle>Humedad del Suelo</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={200}>
