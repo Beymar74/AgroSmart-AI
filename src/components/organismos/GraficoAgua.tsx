@@ -10,14 +10,14 @@ interface Props {
 const GraficoAgua: React.FC<Props> = ({ porcentaje }) => {
   return (
     <div className="bg-white rounded-lg shadow p-4 text-center">
-      <h2 className="text-lg font-bold mb-2">Nivel de Agua</h2>
-      <div className="w-12 mx-auto h-40 border-2 border-blue-400 rounded-md flex items-end">
+      <h2 className="text-lg font-bold mb-4">Agua</h2>
+      <div className="w-full h-24 rounded-lg bg-blue-500 flex items-center justify-center">
         <div
-          className="bg-blue-300 w-full transition-all duration-500"
-          style={{ height: `${porcentaje}%` }}
-        />
+          className="text-white text-2xl font-bold"
+        >
+          {porcentaje}%
+        </div>
       </div>
-      <p className="mt-2 font-semibold text-blue-600">{porcentaje}%</p>
     </div>
   );
 };
