@@ -26,13 +26,13 @@ const Sidebar: React.FC = () => {
           </a>
         </li>
         <li>
-          <a href="#ubicacion" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
+          <a href="/ubicacion" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
             <img src="/ubicacion.png" alt="Ubicación Icon" className="w-6 h-6" />
             <span>Ubicación</span>
           </a>
         </li>
         <li>
-          <a href="#datos-historicos" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
+          <a href="/datos" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
             <img src="/FolderNotch.png" alt="Datos históricos Icon" className="w-6 h-6" />
             <span>Datos históricos</span>
           </a>
