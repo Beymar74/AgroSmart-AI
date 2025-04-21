@@ -102,34 +102,115 @@ export default function Dashboard({ onAccion }: DashboardProps) {
     });
   }, []);
 
+  const [alerts, setAlerts] = useState<string[]>([])
+  const [environmentalData, setEnvironmentalData] = useState<{ temperature: number | null, light: number | null, soilMoisture: number | null }>({ temperature: null, light: null, soilMoisture: null })
+  const [animalData, setAnimalData] = useState<{ code: string, temperature: number | null, state: string, lastFeeding: string }>({ code: "COW001", temperature: null, state: "normal", lastFeeding: "08:00" })
+
+  // Simulate alerts for now
+  useEffect(() => {
+    if (firebaseTemp !== null && firebaseTemp > 30) {
+      setAlerts(prevAlerts => [...prevAlerts, "Temperatura alta detectada"])
+    }
+  }, [firebaseTemp])
+
+  useEffect(() => {
+    setEnvironmentalData({
+      temperature: firebaseTemp,
+      light: firebaseLuz,
+      soilMoisture: firebaseHumedadSuelo,
+    })
+  }, [firebaseTemp, firebaseLuz, firebaseHumedadSuelo])
+
+  useEffect(() => {
+    setAnimalData(prevData => ({ ...prevData, temperature: firebaseTempAnimal }))
+  }, [firebaseTempAnimal])
+
   return (
-    <main className="p-6 space-y-6">
-      {/* Ya no incluimos las tarjetas de alertas, animal ni ambiental aquí */}
+    <main className="p-6">
+      <div className="flex space-x-6">
+        {/* Main Content Area */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Temperature, Light, Soil Moisture */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <GraficoTemperatura data={temperatureData} />
+          </div>
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <GraficoLuz data={luzData} />
+          </div>
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <GraficoHumedadSuelo data={soilMoistureData} />
+          </div>
 
-      {/* Gráficos y dashboard principal */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <GraficoTemperatura data={temperatureData} />
-          <GraficoLuz data={luzData} />
-          <GraficoHumedadSuelo data={soilMoistureData} />
+          {/* Luz Solar, Temperatura Circular, Food/Water Cards */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-1 grid grid-cols-1 gap-6">
+            <div className="row-span-1">
+              <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
+            </div>
+            <div className="row-span-1">
+              <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
+            </div>
+          </div>
+
+          {/* Comida, Agua, Alert History */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-1">
+              <TarjetaComida nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
+            </div>
+            <div className="md:col-span-1">
+              <TarjetaTanque nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
+            </div>
+            <div className="md:col-span-2">
+              <GraficoHistorialAlertas data={alertHistoryData} />
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
-            <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
+        {/* Sidebar */}
+        <aside className="w-80 space-y-6">
+          {/* Alertas y Notificaciones */}
+          <section className="bg-white p-4 rounded-lg shadow">
+            <h3 className="font-bold text-lg">Alertas y Notificaciones</h3>
+            {alerts.length > 0 ? (
+              <ul className="list-disc pl-5 text-sm text-gray-700">
+                {alerts.map((alert, index) => (
+                  <li key={index}>{alert}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-500">No hay alertas recientes.</p>
+            )}
+          </section>
+
+        {/* Datos Ambientales */}
+        <section className="bg-white p-4 rounded-lg shadow">
+          <h3 className="font-bold text-lg">Datos Ambientales</h3>
+          <ul className="text-sm text-gray-700 space-y-1">
+            <li>Temperatura: {environmentalData.temperature !== null ? `${environmentalData.temperature}°C` : "N/A"}</li>
+            <li>Luz: {environmentalData.light !== null ? environmentalData.light : "N/A"}</li>
+            <li>Humedad del Suelo: {environmentalData.soilMoisture !== null ? environmentalData.soilMoisture : "N/A"}</li>
+          </ul>
+        </section>
+
+        {/* Monitoreo Animal */}
+        <section className="bg-white p-4 rounded-lg shadow">
+          <h3 className="font-bold text-lg">Monitoreo Animal</h3>
+          <p className="text-sm text-gray-700">Código: {animalData.code}</p>
+          <p className="text-sm text-gray-700">Temp. Animal (IR): {animalData.temperature !== null ? `${animalData.temperature}°C` : "N/A"}</p>
+          <p className="text-sm text-gray-700">Estado: {animalData.state}</p>
+          <p className="text-sm text-gray-700">Última Alimentación: {animalData.lastFeeding}</p>
+        </section>
+
+        {/* Acciones Rapidas */}
+        <section className="bg-white p-4 rounded-lg shadow">
+          <h3 className="font-bold text-lg">Acciones Rapidas</h3>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <button onClick={() => onAccion("riego")} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded text-xs">Activar Riego</button>
+            <button onClick={() => onAccion("alimentador")} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-2 rounded text-xs">Activar Alimentador</button>
+            <button onClick={() => onAccion("ventilador")} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-2 rounded text-xs">Activar Ventilador</button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <TarjetaComida
-              nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null}
-            />
-            <TarjetaTanque
-              nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null}
-            />
-          </div>
-          <GraficoHistorialAlertas data={alertHistoryData} />
-        </div>
-      </section>
+        </section>
+      </aside>
+      </div>
     </main>
-  );
+  )
 }
