@@ -5,6 +5,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getLatestAnimalData } from "@/services/animal";
 import { analyzeAndAlert } from "@/ai/flows/intelligent-alerting";
+import { Bot, Droplets, Fan, Utensils, X } from "lucide-react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBoy3db8ZR5zglMwm0mwt8G4-rNRbaQ6w",
@@ -60,17 +61,23 @@ const SidebarDer: React.FC = () => {
     }[accion.split("_")[0]]);
   };
 
-  const renderGrupoBotones = (titulo: string, acciones: { label: string, value: string }[]) => (
+  const renderGrupoBotones = (
+    titulo: string,
+    icono: React.ReactNode,
+    acciones: { label: string; value: string; icon: React.ReactNode }[]
+  ) => (
     <div className="mb-6">
-      <h4 className="text-gray-600 font-semibold mb-2">{titulo}</h4>
+      <h4 className="text-gray-600 font-semibold mb-2 flex items-center gap-2">
+        {icono} {titulo}
+      </h4>
       <div className="space-y-2">
         {acciones.map((accion, idx) => (
           <button
             key={idx}
             onClick={() => handleAccion(accion.value)}
-            className="w-full bg-[#94E9B8] hover:bg-opacity-90 rounded-full py-2 px-4 text-black font-semibold"
+            className="w-full bg-green-200 hover:bg-green-300 rounded-xl py-1.5 px-3 text-black font-semibold flex items-center gap-2 justify-center"
           >
-            {accion.label}
+            {accion.icon} {accion.label}
           </button>
         ))}
       </div>
@@ -79,7 +86,6 @@ const SidebarDer: React.FC = () => {
 
   return (
     <aside className="sidebar-der bg-[#f7f7f7] text-black w-64 h-full flex flex-col p-6 overflow-y-auto">
-      {/* Alertas */}
       <section className="bg-white p-4 rounded-lg shadow mb-4">
         <h3 className="font-bold text-lg">Alertas y Notificaciones</h3>
         {alerts.length > 0 ? (
@@ -93,7 +99,6 @@ const SidebarDer: React.FC = () => {
         )}
       </section>
 
-      {/* Datos Ambientales */}
       <section className="bg-white p-4 rounded-lg shadow mb-4">
         <h3 className="font-bold text-lg">Datos Ambientales</h3>
         <ul className="text-sm text-gray-700 space-y-1">
@@ -103,7 +108,6 @@ const SidebarDer: React.FC = () => {
         </ul>
       </section>
 
-      {/* Monitoreo Animal */}
       <section className="bg-white p-4 rounded-lg shadow mb-4">
         <h3 className="font-bold text-lg">Monitoreo Animal</h3>
         <p className="text-sm text-gray-700">Código: {animalData?.codigo ?? "COW001"}</p>
@@ -112,23 +116,22 @@ const SidebarDer: React.FC = () => {
         <p className="text-sm text-gray-700">Última Alimentación: {animalData?.ultimaAlimentacion ?? "08:00"}</p>
       </section>
 
-      {/* Acciones Rápidas */}
       <section className="bg-white p-4 rounded-lg shadow">
         <h3 className="font-bold text-lg mb-2">Acciones Rápidas</h3>
-        {renderGrupoBotones("Riego", [
-          { label: "❌💧 Desactivar Riego", value: "activar_riego" },
-          { label: "💧 Actvar Riego", value: "desactivar_riego" },
-          { label: "🤖 Modo Automático Riego", value: "auto_riego" },
+        {renderGrupoBotones("Riego", <Droplets className="w-4 h-4" />, [
+          { label: "Activar Riego", value: "desactivar_riego", icon: <Droplets className="w-4 h-4" /> },
+          { label: "Desactivar Riego", value: "activar_riego", icon: <X className="w-4 h-4" /> },
+          { label: "Modo Automático Riego", value: "auto_riego", icon: <Bot className="w-4 h-4" /> },
         ])}
-        {renderGrupoBotones("Alimentador", [
-          { label: "❌🍽️ Desactivar Alimentador", value: "activar_alimentador" },
-          { label: "🍽️ Activar Alimentador", value: "desactivar_alimentador" },
-          { label: "🤖 Modo Automático Alimentador", value: "auto_alimentador" },
+        {renderGrupoBotones("Alimentador", <Utensils className="w-4 h-4" />, [
+          { label: "Activar Alimentador", value: "desactivar_alimentador", icon: <Utensils className="w-4 h-4" /> },
+          { label: "Desactivar Alimentador", value: "activar_alimentador", icon: <X className="w-4 h-4" /> },
+          { label: "Modo Automático Alimentador", value: "auto_alimentador", icon: <Bot className="w-4 h-4" /> },
         ])}
-        {renderGrupoBotones("Ventilador", [
-          { label: "❌🌀 Desactivar Ventilador", value: "activar_ventilador" },
-          { label: "🌀 Activar Ventilador", value: "desactivar_ventilador" },
-          { label: "🤖 Modo Automático Ventilador", value: "auto_ventilador" },
+        {renderGrupoBotones("Ventilador", <Fan className="w-4 h-4" />, [
+          { label: "Activar Ventilador", value: "desactivar_ventilador", icon: <Fan className="w-4 h-4" /> },
+          { label: "Desactivar Ventilador", value: "activar_ventilador", icon: <X className="w-4 h-4" /> },
+          { label: "Modo Automático Ventilador", value: "auto_ventilador", icon: <Bot className="w-4 h-4" /> },
         ])}
       </section>
     </aside>
