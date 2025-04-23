@@ -37,6 +37,13 @@ const Sidebar: React.FC = () => {
             <span>Datos históricos</span>
           </a>
         </li>
+        <li>
+          <a href="/programacion" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
+            <img src="/reloj.png" alt="Programación Icon" className="w-6 h-6" />
+            <span>Programación</span>
+          </a>
+        </li>
+
       </ul>
 
       {/* SECCIONES INFORMATIVAS - MÓVIL (Acordeones) */}
