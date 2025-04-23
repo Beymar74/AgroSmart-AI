@@ -13,7 +13,7 @@ function App() {
 
       {/* Panel de control en la parte central */}
       <div className="main-content flex flex-col flex-grow ml-1 mr-1">
-        <Header title="Panel de Control" setMostrarSidebar={function (value: boolean): void {
+        <Header title="Datos Historicos" setMostrarSidebar={function (value: boolean): void {
           throw new Error('Function not implemented.');
         } } />
         <div className="dashboard-container flex-1">
