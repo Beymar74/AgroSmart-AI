@@ -1,43 +1,56 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
+import SidebarDer from "@/components/sidebarDer";
+import Ubicaciones from "@/components/ubicaciones";
 
-const MapaUbicacion: React.FC = () => {
-  const [selectedAnimal, setSelectedAnimal] = useState('Cow001');
+export default function Page() {
+  const [mostrarSidebar, setMostrarSidebar] = useState(false);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-semibold mb-4">Mapa en Tiempo Real</h2>
+    <div className="flex flex-col min-h-screen">
+      {/* Header fijo arriba */}
+      <Header title="Panel de Control" setMostrarSidebar={setMostrarSidebar} />
 
-      {/* Selector de código del animal */}
-      <div className="mb-6">
-        <label htmlFor="animal" className="block text-lg mb-2">Seleccionar El Código Del Animal:</label>
-        <select
-          id="animal"
-          value={selectedAnimal}
-          onChange={(e) => setSelectedAnimal(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="Cow001">Cow001</option>
-          <option value="Cow002">Cow002</option>
-          <option value="Cow003">Cow003</option>
-          {/* Puedes añadir más opciones según lo necesites */}
-        </select>
+      {/* Contenido principal dividido en tres partes */}
+      <div className="flex flex-1 overflow-hidden">
+
+        {/* Sidebar izquierdo */}
+        <div className="hidden md:block w-64">
+          <Sidebar />
+        </div>
+
+        {/* Sidebar móvil */}
+        {mostrarSidebar && (
+          <>
+            <div
+              className="fixed inset-0 bg-black bg-opacity-40 z-40"
+              onClick={() => setMostrarSidebar(false)}
+            />
+            <div className="fixed top-0 left-0 z-50 bg-white shadow-lg w-64 h-full overflow-y-auto animate-slide-in-left">
+              <Sidebar />
+              <button
+                onClick={() => setMostrarSidebar(false)}
+                className="text-red-600 font-semibold px-6 py-2"
+              >
+                ✖ Cerrar
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Dashboard (contenido central) */}
+        <div className="flex-grow overflow-y-auto p-4">
+          <Ubicaciones />
+        </div>
+
+        {/* Sidebar derecho */}
+        <div className="hidden xl:block w-96">
+          <SidebarDer />
+        </div>
       </div>
-
-      {/* Imagen simulada del mapa */}
-      <div className="mb-6">
-        <img
-          src="/Picture12.jpg"  // Ruta de la imagen simulada en la carpeta public
-          alt="Ubicación simulada del mapa"
-          className="mx-auto mb-6 w-full h-auto max-w-4xl border rounded-lg shadow-lg"  // Aumenté el tamaño aquí
-        />
-      </div>
-
-      {/* Etiqueta para mostrar la fecha actual */}
-      <div className="text-sm text-gray-500">Today</div>
     </div>
   );
-};
-
-export default MapaUbicacion;
+}

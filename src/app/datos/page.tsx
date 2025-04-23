@@ -1,99 +1,56 @@
-'use client'; // Directiva para indicar que este componente es del lado del cliente en Next.js
+"use client";
 
-import React from 'react';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import React, { useState } from "react";
+import Header from "@/components/header";
+import Sidebar from "@/components/sidebar";
+import SidebarDer from "@/components/sidebarDer";
+import Datos from "@/components/datoshistoricos";
 
-// Registro de componentes de Chart.js
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+export default function Page() {
+  const [mostrarSidebar, setMostrarSidebar] = useState(false);
 
-const data = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-  datasets: [
-    {
-      label: 'Tendencias variables',
-      data: [65, 59, 80, 81, 56, 55, 40],
-      fill: false,
-      borderColor: 'green',
-      tension: 0.1,
-    },
-  ],
-};
-
-const Page = () => {
   return (
-    <div className="p-6">
-      {/* Date Range and Controls */}
-      <div className="flex justify-between mb-6">
-        <input type="date" className="p-2 border rounded" />
-        <div className="flex space-x-4">
-          <button className="p-2 bg-blue-500 text-white rounded">Tipo de variable</button>
-          <button className="p-2 bg-blue-500 text-white rounded">Registros de animales enfermos</button>
-          <button className="p-2 bg-green-500 text-white rounded">Exportar datos</button>
-        </div>
-      </div>
+    <div className="flex flex-col min-h-screen">
+      {/* Header fijo arriba */}
+      <Header title="Panel de Control" setMostrarSidebar={setMostrarSidebar} />
 
-      {/* Tendencias Variables (Line Chart) */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold">Tendencias variables</h3>
-        <Line data={data} />
-      </div>
+      {/* Contenido principal dividido en tres partes */}
+      <div className="flex flex-1 overflow-hidden">
 
-      {/* Indicadores de Rendimiento */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="p-4 border rounded bg-white shadow">
-          <h4 className="text-lg font-semibold">Temperatura máxima</h4>
-          <p className="text-xl">35°C</p>
-          <p className="text-green-600">+10%</p>
+        {/* Sidebar izquierdo */}
+        <div className="hidden md:block w-64">
+          <Sidebar />
         </div>
-        <div className="p-4 border rounded bg-white shadow">
-          <h4 className="text-lg font-semibold">Temperatura mínima</h4>
-          <p className="text-xl">5°C</p>
-          <p className="text-red-600">-5%</p>
-        </div>
-        <div className="p-4 border rounded bg-white shadow">
-          <h4 className="text-lg font-semibold">Humedad media</h4>
-          <p className="text-xl">60%</p>
-          <p className="text-green-600">+2%</p>
-        </div>
-      </div>
 
-      {/* Alerts Section (Table) */}
-      <div>
-        <h3 className="text-xl font-semibold mb-4">Alerts</h3>
-        <table className="w-full table-auto border-collapse border">
-          <thead>
-            <tr>
-              <th className="p-2 border">Fecha</th>
-              <th className="p-2 border">Tipo de alerta</th>
-              <th className="p-2 border">Valor detectado</th>
-              <th className="p-2 border">Crítico</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="p-2 border">2024-07-15 10:00</td>
-              <td className="p-2 border">Alta Temperatura</td>
-              <td className="p-2 border">33°C</td>
-              <td className="p-2 border text-red-600">Alto</td>
-            </tr>
-            <tr>
-              <td className="p-2 border">2024-07-14 14:00</td>
-              <td className="p-2 border">Baja Humedad</td>
-              <td className="p-2 border">30%</td>
-              <td className="p-2 border text-yellow-600">Medio</td>
-            </tr>
-            <tr>
-              <td className="p-2 border">2024-07-10 20:00</td>
-              <td className="p-2 border">Baja Temperatura</td>
-              <td className="p-2 border">8°C</td>
-              <td className="p-2 border text-green-600">Bajo</td>
-            </tr>
-          </tbody>
-        </table>
+        {/* Sidebar móvil */}
+        {mostrarSidebar && (
+          <>
+            <div
+              className="fixed inset-0 bg-black bg-opacity-40 z-40"
+              onClick={() => setMostrarSidebar(false)}
+            />
+            <div className="fixed top-0 left-0 z-50 bg-white shadow-lg w-64 h-full overflow-y-auto animate-slide-in-left">
+              <Sidebar />
+              <button
+                onClick={() => setMostrarSidebar(false)}
+                className="text-red-600 font-semibold px-6 py-2"
+              >
+                ✖ Cerrar
+              </button>
+            </div>
+          </>
+        )}
+
+        {/* Dashboard (contenido central) */}
+        <div className="flex-grow overflow-y-auto p-4">
+          <Datos />
+        </div>
+
+        {/* Sidebar derecho */}
+        <div className="hidden xl:block w-96">
+          <SidebarDer />
+        </div>
       </div>
     </div>
   );
-};
-
-export default Page;
+}

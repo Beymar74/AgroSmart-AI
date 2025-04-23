@@ -90,19 +90,74 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <main className="p-6 min-h-screen bg-[#f8f8f8]">
-      <div className="max-w-[1600px] mx-auto flex gap-6">
-        {/* Grid Principal */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-grow gap-6">
+    <main className="p-6 space-y-6">
+  
+      {/* Sección superior con tarjetas principales }
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <TarjetaAmbiental
+          temperatura={firebaseTemp}
+          luz={firebaseLuz}
+          humedadSuelo={firebaseHumedadSuelo}
+        />
+        <TarjetaAnimal
+          animalData={animalData}
+          temperaturaIR={firebaseTempAnimal}
+        />
+        <TarjetaAlertas alertas={alerts} />
+      </section>
+  
+      {/* Sección con dos columnas principales */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        {/* Columna izquierda: Gráficos ambientales */}
+        <div className="space-y-6">
           <GraficoTemperatura data={temperatureData} />
+          <GraficoLuz data={luzData} />
           <GraficoHumedadSuelo data={soilMoistureData} />
-          <GraficoCircular label="Luz Solar" data={solarCircularData} unit="%" />
-          <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
-          <GraficoHistorialAlertas data={alertHistoryData} />
-          <TarjetaComida nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
-          <TarjetaTanque nivelPorcentaje={firebaseDistancia !== null ? convertirADistanciaPorcentaje(firebaseDistancia) : null} />
         </div>
-      </div>
+  
+        {/* Columna derecha: Dashboard luz y animal, tanque, comida, historial */}
+        <div className="space-y-6">
+          
+          {/* Dashboard de luz y temperatura animal */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <GraficoCircular
+      label="Luz Solar"
+      data={solarCircularData}
+      unit="lm"
+    />
+    <GraficoCircular
+      label="Temperatura"
+      data={animalCircularData}
+      unit="°C"
+    />
+  </div>
+          {/* Tarjeta tanque y comida */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <TarjetaComida
+     nivelPorcentaje={
+       firebaseDistancia !== null
+         ? convertirADistanciaPorcentaje(firebaseDistancia)
+         : null
+     }
+  />
+    <TarjetaTanque
+      nivelPorcentaje={
+        firebaseDistancia !== null
+          ? convertirADistanciaPorcentaje(firebaseDistancia)
+          : null
+      }
+    />
+    
+  </div>
+  
+          {/* Historial de alertas */}
+          <GraficoHistorialAlertas data={alertHistoryData} />
+  
+        </div>
+  
+      </section>
     </main>
   );
-}
+  
+  }
