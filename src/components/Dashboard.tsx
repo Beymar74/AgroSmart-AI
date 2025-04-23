@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [firebaseTempAnimal, setFirebaseTempAnimal] = useState<number | null>(null);
   const [tempAnimalData, setTempAnimalData] = useState<any[]>([]);
   const [firebasePresion, setFirebasePresion] = useState<number | null>(null);
+  const [firebaseNivelComida, setFirebaseNivelComida] = useState<number | null>(null);
 
   const alertHistoryData = [
     { type: "Fiebre", count: Math.floor(Math.random() * 5) },
@@ -60,6 +61,7 @@ export default function Dashboard() {
     onValue(ref(db, "ambiente/distancia"), snap => setFirebaseDistancia(snap.val()));
     onValue(ref(db, "ambiente/temperatura_animal"), snap => setFirebaseTempAnimal(snap.val()));
     onValue(ref(db, "ambiente/presion"), snap => setFirebasePresion(snap.val()));
+    onValue(ref(db, "ambiente/nivel_comida"), snap => setFirebaseNivelComida(snap.val()));
 
     onValue(ref(db, "historico/temperatura"), snap => {
       setTemperatureData(Object.entries(snap.val() || {}).map(([k, v]) => ({
@@ -81,6 +83,7 @@ export default function Dashboard() {
         temperatura: v
       })));
     });
+
     onValue(ref(db, "historico/luz"), snap => {
       const data = snap.val();
       if (data) {
@@ -91,44 +94,45 @@ export default function Dashboard() {
         setLuzData(parsed);
       }
     });
-    
   }, []);
 
   return (
-    <main className="p-6 space-y-6">
+    <main className="p-6 space-y-10">
+      {/* Sección 1: Condiciones ambientales */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <GraficoTemperatura data={temperatureData} />
-          <GraficoLuz data={luzData} />
-          <GraficoHumedadSuelo data={soilMoistureData} />
-          <GraficoPresion />
-        </div>
+        <GraficoTemperatura data={temperatureData} />
+        <GraficoLuz data={luzData} />
+      </section>
 
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
-          </div>
+      {/* Sección 2: Estado de recursos */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <TarjetaComida
+          nivelPorcentaje={
+            firebaseNivelComida !== null
+              ? convertirADistanciaPorcentaje(firebaseNivelComida)
+              : null
+          }
+        />
+        <TarjetaTanque
+          nivelPorcentaje={
+            firebaseDistancia !== null
+              ? convertirADistanciaPorcentaje(firebaseDistancia)
+              : null
+          }
+        />
+        <TarjetaPresion presion={firebasePresion} />
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <TarjetaComida
-              nivelPorcentaje={
-                firebaseDistancia !== null
-                  ? convertirADistanciaPorcentaje(firebaseDistancia)
-                  : null
-              }
-            />
-            <TarjetaTanque
-              nivelPorcentaje={
-                firebaseDistancia !== null
-                  ? convertirADistanciaPorcentaje(firebaseDistancia)
-                  : null
-              }
-            />
-            <TarjetaPresion presion={firebasePresion} />
-          </div>
+      {/* Sección 3: Estado animal y alertas */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
+        <GraficoHistorialAlertas data={alertHistoryData} />
+      </section>
 
-          <GraficoHistorialAlertas data={alertHistoryData} />
-        </div>
+      {/* Sección 4: Factores de control agrícola */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <GraficoHumedadSuelo data={soilMoistureData} />
+        <GraficoPresion />
       </section>
     </main>
   );
