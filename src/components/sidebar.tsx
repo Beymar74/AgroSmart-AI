@@ -8,7 +8,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="sidebar bg-[#f7f7f7] text-black w-64 h-full flex flex-col p-6">
+    <div className="sidebar bg-[#f7f7f7] text-black w-47 h-full flex flex-col p-6">
 
       
       {/* LOGO */}
@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
       {/* MENÚ */}
       <ul className="menu space-y-4">
         <li>
-          <a href="#dashboard" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
+          <a href="/dashboard" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
             <img src="/ChartPieSlice.png" alt="Dashboard Icon" className="w-6 h-6" />
             <span>Dashboard</span>
           </a>
