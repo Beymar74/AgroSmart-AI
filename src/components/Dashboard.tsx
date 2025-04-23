@@ -7,10 +7,11 @@ import TarjetaComida from "@/components/organismos/TarjetaComida";
 import TarjetaTanque from "@/components/organismos/TarjetaTanque";
 import GraficoTemperatura from "@/components/organismos/GraficoTemperatura";
 import GraficoLuz from "@/components/organismos/GraficoLuz";
-import GraficoLuzSolar from "@/components/organismos/GraficoLuzSolar";
+import TarjetaPresion from "@/components/organismos/TarjetaPresion";
 import GraficoHumedadSuelo from "@/components/organismos/GraficoHumedadSuelo";
 import GraficoCircular from "@/components/organismos/GraficoCircular";
 import GraficoHistorialAlertas from "@/components/organismos/GraficoHistorialAlertas";
+import GraficoPresion from "@/components/organismos/GraficoPresion";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBoy3db8ZR5zglMwm0mwt8G4-rNRbaQ6w",
@@ -36,13 +37,13 @@ export default function Dashboard() {
   const [firebaseLuz, setFirebaseLuz] = useState<number | null>(null);
   const [firebaseHumedadSuelo, setFirebaseHumedadSuelo] = useState<number | null>(null);
   const [luzData, setLuzData] = useState<any[]>([]);
-  const [solarData, setSolarData] = useState<any[]>([]);
   const [firebaseTemp, setFirebaseTemp] = useState<number | null>(null);
   const [temperatureData, setTemperatureData] = useState<any[]>([]);
   const [soilMoistureData, setSoilMoistureData] = useState<any[]>([]);
   const [firebaseDistancia, setFirebaseDistancia] = useState<number | null>(null);
   const [firebaseTempAnimal, setFirebaseTempAnimal] = useState<number | null>(null);
   const [tempAnimalData, setTempAnimalData] = useState<any[]>([]);
+  const [firebasePresion, setFirebasePresion] = useState<number | null>(null);
 
   const alertHistoryData = [
     { type: "Fiebre", count: Math.floor(Math.random() * 5) },
@@ -50,7 +51,6 @@ export default function Dashboard() {
     { type: "Falta de Alimentación", count: Math.floor(Math.random() * 3) }
   ];
 
-  const solarCircularData = solarData.map(d => ({ hour: d.hour, value: d.luzSolar }));
   const animalCircularData = tempAnimalData.map(d => ({ hour: d.hour, value: d.temperatura }));
 
   useEffect(() => {
@@ -59,18 +59,12 @@ export default function Dashboard() {
     onValue(ref(db, "ambiente/humedad_suelo"), snap => setFirebaseHumedadSuelo(snap.val()));
     onValue(ref(db, "ambiente/distancia"), snap => setFirebaseDistancia(snap.val()));
     onValue(ref(db, "ambiente/temperatura_animal"), snap => setFirebaseTempAnimal(snap.val()));
+    onValue(ref(db, "ambiente/presion"), snap => setFirebasePresion(snap.val()));
 
     onValue(ref(db, "historico/temperatura"), snap => {
       setTemperatureData(Object.entries(snap.val() || {}).map(([k, v]) => ({
         hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         temperature: v
-      })));
-    });
-
-    onValue(ref(db, "historico/luz_solar"), snap => {
-      setSolarData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        luzSolar: Math.min(100, Math.round((Number(v) / 4095) * 100))
       })));
     });
 
@@ -87,77 +81,55 @@ export default function Dashboard() {
         temperatura: v
       })));
     });
+    onValue(ref(db, "historico/luz"), snap => {
+      const data = snap.val();
+      if (data) {
+        const parsed = Object.entries(data).map(([k, v]) => ({
+          hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          value: Math.min(100, Math.round((Number(v) / 4095) * 100))
+        }));
+        setLuzData(parsed);
+      }
+    });
+    
   }, []);
 
   return (
     <main className="p-6 space-y-6">
-  
-      {/* Sección superior con tarjetas principales }
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TarjetaAmbiental
-          temperatura={firebaseTemp}
-          luz={firebaseLuz}
-          humedadSuelo={firebaseHumedadSuelo}
-        />
-        <TarjetaAnimal
-          animalData={animalData}
-          temperaturaIR={firebaseTempAnimal}
-        />
-        <TarjetaAlertas alertas={alerts} />
-      </section>
-  
-      {/* Sección con dos columnas principales */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* Columna izquierda: Gráficos ambientales */}
         <div className="space-y-6">
           <GraficoTemperatura data={temperatureData} />
           <GraficoLuz data={luzData} />
           <GraficoHumedadSuelo data={soilMoistureData} />
+          <GraficoPresion />
         </div>
-  
-        {/* Columna derecha: Dashboard luz y animal, tanque, comida, historial */}
+
         <div className="space-y-6">
-          
-          {/* Dashboard de luz y temperatura animal */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <GraficoCircular
-      label="Luz Solar"
-      data={solarCircularData}
-      unit="lm"
-    />
-    <GraficoCircular
-      label="Temperatura"
-      data={animalCircularData}
-      unit="°C"
-    />
-  </div>
-          {/* Tarjeta tanque y comida */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <TarjetaComida
-     nivelPorcentaje={
-       firebaseDistancia !== null
-         ? convertirADistanciaPorcentaje(firebaseDistancia)
-         : null
-     }
-  />
-    <TarjetaTanque
-      nivelPorcentaje={
-        firebaseDistancia !== null
-          ? convertirADistanciaPorcentaje(firebaseDistancia)
-          : null
-      }
-    />
-    
-  </div>
-  
-          {/* Historial de alertas */}
+            <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <TarjetaComida
+              nivelPorcentaje={
+                firebaseDistancia !== null
+                  ? convertirADistanciaPorcentaje(firebaseDistancia)
+                  : null
+              }
+            />
+            <TarjetaTanque
+              nivelPorcentaje={
+                firebaseDistancia !== null
+                  ? convertirADistanciaPorcentaje(firebaseDistancia)
+                  : null
+              }
+            />
+            <TarjetaPresion presion={firebasePresion} />
+          </div>
+
           <GraficoHistorialAlertas data={alertHistoryData} />
-  
         </div>
-  
       </section>
     </main>
   );
-  
-  }
+}
