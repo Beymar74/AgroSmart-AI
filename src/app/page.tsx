@@ -11,6 +11,8 @@ function App() {
       {/* Sidebar izquierdo */}
       <Sidebar /> 
 
+
+
       {/* Panel de control en la parte central */}
       <div className="main-content flex flex-col flex-grow ml-1 mr-1">
         <Header title="Panel de Control" setMostrarSidebar={function (value: boolean): void {
