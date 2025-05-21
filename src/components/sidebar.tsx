@@ -42,9 +42,9 @@ const Sidebar: React.FC = () => {
             </a>
           </li>
           <li>
-            <a href="/ubicacion" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
-              <img src="/ubicacion.png" alt="Ubicación Icon" className="w-6 h-6" />
-              <span>Ubicación</span>
+            <a href="/reportes" className="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded">
+              <img src="/Reportes.png" alt="Reportes Icon" className="w-6 h-6" />
+              <span>Reportes</span>
             </a>
           </li>
           <li>

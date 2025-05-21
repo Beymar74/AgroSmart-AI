@@ -3,21 +3,20 @@ import React from 'react';
 import Header from '@/components/header';  // Asegúrate de que la ruta sea correcta
 import Sidebar from '@/components/sidebar';  // Asegúrate de que la ruta sea correcta
 import SidebarDer from '@/components/sidebarDer'; // Asegúrate de que la ruta sea correcta
-import Ubicacion from '@/components/ubicacion'; // Asegúrate de que la ruta sea correcta
+import Reportes from '@/components/reportes'; // Asegúrate de que la ruta sea correcta
 
 function App() {
   return (
     <div className="App flex min-h-screen">
-      {/* Sidebar izquierdo */}
-      <Sidebar /> 
+      {/* Sidebar izquierdo */}      <Sidebar /> 
 
       {/* Panel de control en la parte central */}
       <div className="main-content flex flex-col flex-grow ml-1 mr-1">
-        <Header title="Ubicaciones" setMostrarSidebar={function (value: boolean): void {
+        <Header title="Reportes" setMostrarSidebar={function (value: boolean): void {
           throw new Error('Function not implemented.');
         } } />
         <div className="dashboard-container flex-1">
-          <Ubicacion />
+          <Reportes />
         </div>
       </div>
 

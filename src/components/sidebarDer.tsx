@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { getLatestAnimalData } from "@/services/animal";
-import { analyzeAndAlert } from "@/ai/flows/intelligent-alerting";
+import { analyzeLocally } from "@/ai/flows/analyzeLocally";
 import { Bot, Droplets, Fan, Utensils, X } from "lucide-react";
 
 const firebaseConfig = {
@@ -29,10 +29,9 @@ const SidebarDer: React.FC = () => {
   const [alerts, setAlerts] = useState<string[]>([]);
 
   const actualizarAlertas = async (envData: any, aniData: any) => {
-    const result = await analyzeAndAlert({
-      historicalAlerts: "No hay alertas recientes.",
+    const result = analyzeLocally({
       environmentData: envData,
-      animalData: aniData
+      animalData: aniData,
     });
     setAlerts(result.alerts);
   };
@@ -133,6 +132,13 @@ const SidebarDer: React.FC = () => {
           { label: "Desactivar Ventilador", value: "activar_ventilador", icon: <X className="w-4 h-4" /> },
           { label: "Modo Automático Ventilador", value: "auto_ventilador", icon: <Bot className="w-4 h-4" /> },
         ])}
+        {renderGrupoBotones("Agua para Animales", <Droplets className="w-4 h-4" />, [
+          { label: "Activar Agua", value: "desactivar_aguaanimal", icon: <Droplets className="w-4 h-4" /> },
+          { label: "Desactivar Agua", value: "activar_aguaanimal", icon: <X className="w-4 h-4" /> },
+          { label: "Modo Automático Agua", value: "auto_aguaanimal", icon: <Bot className="w-4 h-4" /> },
+        ])}
+
+
       </section>
     </aside>
   );
