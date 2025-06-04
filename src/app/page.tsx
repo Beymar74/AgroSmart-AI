@@ -1,30 +1,46 @@
 "use client";
-import React from 'react';
-import Header from '@/components/header';  // Asegúrate de que la ruta sea correcta
-import Sidebar from '@/components/sidebar';  // Asegúrate de que la ruta sea correcta
-import SidebarDer from '@/components/sidebarDer'; // Asegúrate de que la ruta sea correcta
-import Dashboard from '@/components/Dashboard'; // Asegúrate de que la ruta sea correcta
+import React, { useState } from 'react';
+import Header from '@/components/header';
+import Sidebar from '@/components/sidebar';
+import SidebarDer from '@/components/sidebarDer';
+import Dashboard from '@/components/Dashboard';
 
 function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
-    <div className="App flex min-h-screen">
-      {/* Sidebar izquierdo */}
-      <Sidebar /> 
-
-
-
-      {/* Panel de control en la parte central */}
-      <div className="main-content flex flex-col flex-grow ml-1 mr-1">
-        <Header title="Panel de Control" setMostrarSidebar={function (value: boolean): void {
-          throw new Error('Function not implemented.');
-        } } />
-        <div className="dashboard-container flex-1">
-          <Dashboard />
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar izquierdo - Posición fija */}
+      <div className="fixed inset-y-0 left-0 z-50 w-64 transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-0">
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      </div>
+      
+      {/* Overlay para móviles cuando sidebar está abierto */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      {/* Contenido principal */}
+      <div className="flex-1 flex flex-col lg:ml-64">
+        {/* Header */}
+        <Header onMenuClick={() => setSidebarOpen(true)} />
+        
+        {/* Dashboard y Sidebar derecho */}
+        <div className="flex flex-1">
+          {/* Dashboard central */}
+          <div className="flex-1 min-w-0">
+            <Dashboard />
+          </div>
+          
+          {/* Sidebar derecho - oculto en móviles */}
+          <div className="hidden xl:block w-80 flex-shrink-0">
+            <SidebarDer />
+          </div>
         </div>
       </div>
-
-      {/* Sidebar derecho */}
-      <SidebarDer />
     </div>
   );
 }

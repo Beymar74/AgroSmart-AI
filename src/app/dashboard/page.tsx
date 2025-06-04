@@ -1,28 +1,39 @@
 "use client";
-import React from 'react';
-import Header from '@/components/header';  // Asegúrate de que la ruta sea correcta
-import Sidebar from '@/components/sidebar';  // Asegúrate de que la ruta sea correcta
-import SidebarDer from '@/components/sidebarDer'; // Asegúrate de que la ruta sea correcta
-import Dashboard from '@/components/Dashboard'; // Asegúrate de que la ruta sea correcta
+import React, { useState } from 'react';
+import Header from '@/components/header';  
+import Sidebar from '@/components/sidebar';  
+import SidebarDer from '@/components/sidebarDer'; 
+import Dashboard from '@/components/Dashboard'; 
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarDerOpen, setIsSidebarDerOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="App flex min-h-screen">
       {/* Sidebar izquierdo */}
-      <Sidebar /> 
+      <Sidebar 
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
       {/* Panel de control en la parte central */}
       <div className="main-content flex flex-col flex-grow ml-1 mr-1">
-        <Header title="Panel de Control" setMostrarSidebar={function (value: boolean): void {
-          throw new Error('Function not implemented.');
-        } } />
+        <Header 
+          onMenuClick={toggleSidebar}
+          showMenuButton={true}
+        />
         <div className="dashboard-container flex-1">
           <Dashboard />
         </div>
       </div>
 
       {/* Sidebar derecho */}
-      <SidebarDer />
+      {isSidebarDerOpen && <SidebarDer />}
     </div>
   );
 }
