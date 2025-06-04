@@ -2,26 +2,43 @@ import React from 'react';
 
 interface HeaderProps {
   title: string;
-  setMostrarSidebar: (value: boolean) => void;
+  setMostrarSidebar: () => void; // ahora no recibe un boolean, sino una función que alterna
 }
 
 const Header: React.FC<HeaderProps> = ({ title, setMostrarSidebar }) => {
   return (
-    <div className="header-container w-full p-4 bg-white shadow-md flex items-center justify-between">
-      {/* Botón hamburguesa visible solo en móviles */}
+    <header className="flex items-center justify-between bg-white px-4 py-3 shadow-md md:px-6 md:py-4">
+      {/* Botón hamburguesa visible solo en móviles (md:hidden) */}
       <button
-        onClick={() => setMostrarSidebar(true)}
-        className="md:hidden text-2xl font-bold text-gray-700"
+        onClick={setMostrarSidebar}
+        className="md:hidden text-2xl font-bold text-gray-700 focus:outline-none"
       >
         ☰
       </button>
 
       {/* Título centrado */}
-      <h1 className="text-xl font-bold text-center flex-grow">{title}</h1>
+      <h1 className="flex-grow text-center text-lg font-semibold text-gray-800 md:text-xl">
+        {title}
+      </h1>
 
-      {/* Espacio invisible para mantener el título centrado */}
-      <div className="w-6 md:hidden"></div>
-    </div>
+      {/* Botón para abrir sidebar derecho en móviles */}
+      <button
+        onClick={() => {
+          /* 
+            Para abrir el sidebar derecho, dispararemos un evento personalizado
+            o usaremos un callback adicional. Por simplicidad, capturaremos desde DOM.
+          */
+          const event = new CustomEvent('toggle-sidebar-der');
+          window.dispatchEvent(event);
+        }}
+        className="md:hidden text-2xl font-bold text-gray-700 focus:outline-none"
+      >
+        ⋮
+      </button>
+
+      {/* Espacio invisible en pantallas >= md para mantener el título centrado */}
+      <div className="hidden w-6 md:block"></div>
+    </header>
   );
 };
 
