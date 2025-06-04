@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getDatabase, ref, onValue } from "firebase/database";
-import { initializeApp } from "firebase/app";
 import TarjetaComida from "@/components/organismos/TarjetaComida";
 import TarjetaTanque from "@/components/organismos/TarjetaTanque";
 import GraficoTemperatura from "@/components/organismos/GraficoTemperatura";
@@ -20,10 +20,11 @@ const firebaseConfig = {
   projectId: "agrosmart-ai-9ee95",
   storageBucket: "agrosmart-ai-9ee95.appspot.com",
   messagingSenderId: "854583309870",
-  appId: "1:854583309870:web:50d37190c1ba4355e5d1bf"
+  appId: "1:85456308706:web:50d37190c1ba4355e5d1bf"
 };
 
-const app = initializeApp(firebaseConfig);
+// Solo inicializamos si no existe ninguna app en Firebase
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getDatabase(app);
 
 const convertirADistanciaPorcentaje = (cm: number): number => {
@@ -64,24 +65,33 @@ export default function Dashboard() {
     onValue(ref(db, "ambiente/nivel_comida"), snap => setFirebaseNivelComida(snap.val()));
 
     onValue(ref(db, "historico/temperatura"), snap => {
-      setTemperatureData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        temperature: v
-      })));
+      const data = snap.val() || {};
+      setTemperatureData(
+        Object.entries(data).map(([k, v]) => ({
+          hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          temperature: v
+        }))
+      );
     });
 
     onValue(ref(db, "historico/humedad_suelo"), snap => {
-      setSoilMoistureData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        moisture: v
-      })));
+      const data = snap.val() || {};
+      setSoilMoistureData(
+        Object.entries(data).map(([k, v]) => ({
+          hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          moisture: v
+        }))
+      );
     });
 
     onValue(ref(db, "historico/temperatura_animal"), snap => {
-      setTempAnimalData(Object.entries(snap.val() || {}).map(([k, v]) => ({
-        hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        temperatura: v
-      })));
+      const data = snap.val() || {};
+      setTempAnimalData(
+        Object.entries(data).map(([k, v]) => ({
+          hour: new Date(Number(k)).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          temperatura: v
+        }))
+      );
     });
 
     onValue(ref(db, "historico/luz"), snap => {
@@ -97,15 +107,15 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <main className="p-6 space-y-10">
+    <div className="space-y-8">
       {/* Sección 1: Condiciones ambientales */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <GraficoTemperatura data={temperatureData} />
         <GraficoLuz data={luzData} />
       </section>
 
       {/* Sección 2: Estado de recursos */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <TarjetaComida
           nivelPorcentaje={
             firebaseNivelComida !== null
@@ -124,16 +134,16 @@ export default function Dashboard() {
       </section>
 
       {/* Sección 3: Estado animal y alertas */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <GraficoCircular label="Temperatura" data={animalCircularData} unit="°C" />
         <GraficoHistorialAlertas data={alertHistoryData} />
       </section>
 
       {/* Sección 4: Factores de control agrícola */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <GraficoHumedadSuelo data={soilMoistureData} />
         <GraficoPresion />
       </section>
-    </main>
+    </div>
   );
 }
